@@ -1,33 +1,43 @@
 # LMS Student Performance: End to End Data Engineering on Microsoft Fabric
 
 [![CI](https://github.com/anson4747/fabric-lms-medallion-pipeline/actions/workflows/ci.yml/badge.svg)](https://github.com/anson4747/fabric-lms-medallion-pipeline/actions/workflows/ci.yml)
+![Microsoft Fabric](https://img.shields.io/badge/Microsoft%20Fabric-0F7B6C?logo=microsoft&logoColor=white)
+![PySpark](https://img.shields.io/badge/PySpark-E25A1C?logo=apachespark&logoColor=white)
+![Delta Lake](https://img.shields.io/badge/Delta%20Lake-00ADD4?logo=delta&logoColor=white)
+![Power BI](https://img.shields.io/badge/Power%20BI-F2C811?logo=powerbi&logoColor=black)
+![Azure DevOps](https://img.shields.io/badge/Azure%20DevOps-0078D7?logo=azuredevops&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?logo=githubactions&logoColor=white)
 
 An end to end lakehouse pipeline on **Microsoft Fabric** that ingests daily Learning Management System (LMS) extracts from **ADLS Gen2**, refines them through a **medallion architecture** (Landing, Bronze, Silver, Gold) with incremental **Delta Lake MERGE** loads, and serves a **Direct Lake** Power BI model. The workspace is version controlled with **Fabric Git integration (Azure DevOps)** and promoted from Dev to Prod with **Fabric deployment pipelines**.
 
 > **Focus of this project:** the data engineering behind the insight, from raw files to a governed, version controlled, deployable pipeline. The Power BI report is intentionally basic. It exists to prove the Gold layer and the Direct Lake model work end to end, not to showcase dashboard design.
+
+## Highlights
+
+* **Incremental ingestion:** only files modified today are picked up from ADLS Gen2 and landed into date partitions
+* **Idempotent medallion loads:** Bronze, Silver and Gold are upserted with Delta Lake `MERGE` on business keys, so reruns do not duplicate data
+* **Data quality in Silver:** deduplication, key validation, defaults, typed dates, logical consistency checks and derived business metrics
+* **Star schema served through Direct Lake:** no import refresh between Gold and Power BI
+* **Workspace as code:** every Fabric item is versioned in Git, with feature branches, a protected `main`, and a Dev to Prod deployment pipeline
+* **Tested outside Fabric:** the transformation logic has unit tests and runs end to end on synthetic data in GitHub Actions
 
 This repository holds the Fabric item definitions exported from the workspace, plus a local, tested copy of the transformation logic so the pipeline can be reviewed and validated without a Fabric capacity.
 
 ## Architecture
 
 ```mermaid
-flowchart LR
-    subgraph ADLS["ADLS Gen2 (fabricproject container)"]
-        RAW["raw/<br/>daily CSV extracts"]
-        LAND["landing/<br/>partitioned by processing_date"]
+flowchart TB
+    SRC["Daily LMS extract (CSV)"] --> RAW
+    subgraph ADLS["Azure Data Lake Storage Gen2"]
+        RAW["raw/"] -- "01 Raw to Landing: new files only" --> LAND["landing/ (partitioned by processing_date)"]
     end
-    subgraph FABRIC["Microsoft Fabric workspace"]
-        BR[("LH_Bronze<br/>bronze_data")]
-        SI[("LH_Silver<br/>silver_data")]
-        GO[("LH_Gold<br/>dim_student, dim_course,<br/>fact_student_performance")]
-        SM["LMS_model<br/>Direct Lake semantic model"]
-        RP["LMS Student Performance<br/>Power BI report"]
+    subgraph FABRIC["Microsoft Fabric: medallion lakehouse"]
+        BR[("Bronze: bronze_data")] -- "03 Silver Transform: clean, type, enrich, MERGE" --> SI[("Silver: silver_data")]
+        SI -- "04 Gold Layer: star schema, MERGE" --> GO[("Gold: dim_student, dim_course, fact_student_performance")]
+        GO --> SM["LMS_model (Direct Lake)"] --> RP["Validation report"]
     end
-    RAW -- "01 Raw to Landing<br/>(incremental, by modified date)" --> LAND
-    LAND -- "02 Landing to Bronze<br/>(dedupe + MERGE)" --> BR
-    BR -- "03 Silver Transform<br/>(clean, type, enrich + MERGE)" --> SI
-    SI -- "04 Gold Layer<br/>(star schema + MERGE)" --> GO
-    GO --> SM --> RP
+    LAND -- "02 Landing to Bronze: dedupe, MERGE" --> BR
+    ORCH{{"PL_00 End to End Orchestrate"}} -. "runs in order, retries" .-> FABRIC
 ```
 
 All four steps are orchestrated by **PL_00_End_to_End_Orchestrate**, which invokes the ingestion pipeline and then runs the three notebooks in sequence in a shared high concurrency Spark session (`sessionTag: lms_pipeline`), with 2 retries per notebook.
