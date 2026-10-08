@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+.local_lakehouse/
+spark-warehouse/
+metastore_db/
+derby.log
+*.pbix
+.DS_Store
+# Power BI Desktop local settings
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
