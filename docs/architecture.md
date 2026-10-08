@@ -84,6 +84,8 @@ erDiagram
 
 ## Semantic model and report
 
+> The report is intentionally basic. It validates the Gold layer and the Direct Lake model end to end; the engineering work upstream is the focus of this project.
+
 `LMS_model` uses **Direct Lake** partitions over `LH_Gold` (no import refresh needed), with many to one relationships from the fact to both dimensions.
 
 | Measure | DAX |
@@ -94,4 +96,4 @@ erDiagram
 | Average Completion Days | `AVERAGE(fact_student_performance[Completion_Time_Days])` |
 | Average Quiz Score | `AVERAGE(fact_student_performance[Quiz_Average_Score])` |
 
-The report page has a KPI card row for all five measures, a donut of completion status, a pie of final grades, a decomposition tree explaining average completion days by learning style and parent involvement, a column chart of time spent by age, and slicers for final grade, status and language proficiency.
+The one page validation report has a KPI card row for all five measures, a donut of completion status, a pie of final grades, a decomposition tree explaining average completion days by learning style and parent involvement, a column chart of time spent by age, and slicers for final grade, status and language proficiency.

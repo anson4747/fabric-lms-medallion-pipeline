@@ -15,7 +15,7 @@ The orchestrator passed `workspace = "NA"` to the Gold notebook, so it tried to 
 **Fix:** `workspace_name`, `storage_account` and `storage_container` are pipeline parameters, passed to every notebook. `scripts/validate_fabric_items.py` now fails CI if a pipeline passes a literal workspace name.
 
 ### 3. Placeholder completion date skewed metrics
-Silver filled missing `Completion_Date` with `12/31/9999`. For in-progress courses this produced `Completion_Time_Days` of roughly 2.9 million, inflating the `Average Completion Days` measure on the report, and labelled every in-progress course as `Delayed`.
+Silver filled missing `Completion_Date` with `12/31/9999`. The extract used in the course run happened to carry completion dates for its in-progress rows, so the report showed a plausible 87.88 days. The bug was latent: any in-progress row without a completion date would get a `Completion_Time_Days` of roughly 2.9 million, inflate the `Average Completion Days` measure, and be labelled `Delayed`.
 
 **Fix:** completion stays null, `Completion_Time_Days` is null for in-progress rows (so `AVERAGE` ignores them), and `Course_Completion_Rate` has an explicit `In-Progress` value. The consistency filter keeps null completions. Days are computed with `datediff` rather than casting a date interval.
 

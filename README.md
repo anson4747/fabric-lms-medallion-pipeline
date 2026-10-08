@@ -4,6 +4,8 @@
 
 An end to end lakehouse pipeline on **Microsoft Fabric** that ingests daily Learning Management System (LMS) extracts from **ADLS Gen2**, refines them through a **medallion architecture** (Landing, Bronze, Silver, Gold) with incremental **Delta Lake MERGE** loads, and serves a **Direct Lake** Power BI model. The workspace is version controlled with **Fabric Git integration (Azure DevOps)** and promoted from Dev to Prod with **Fabric deployment pipelines**.
 
+> **Focus of this project:** the data engineering behind the insight, from raw files to a governed, version controlled, deployable pipeline. The Power BI report is intentionally basic. It exists to prove the Gold layer and the Direct Lake model work end to end, not to showcase dashboard design.
+
 This repository holds the Fabric item definitions exported from the workspace, plus a local, tested copy of the transformation logic so the pipeline can be reviewed and validated without a Fabric capacity.
 
 ## Architecture
@@ -37,9 +39,27 @@ All four steps are orchestrated by **PL_00_End_to_End_Orchestrate**, which invok
 | Bronze | `LH_Bronze.dbo.bronze_data` (Delta) | Explicit schema on read, dedupe on `(Student_ID, Course_ID)`, upsert with SQL `MERGE` |
 | Silver | `LH_Silver.dbo.silver_data` (Delta) | Drop duplicates and rows missing keys, default descriptive fields, parse dates, reject completion before enrolment, derive `Completion_Time_Days`, `Performance_Score`, `Course_Completion_Rate`, upsert with `MERGE` |
 | Gold | `LH_Gold.dbo.*` (Delta) | Star schema: `dim_student`, `dim_course`, `fact_student_performance` loaded with the Delta Lake Python `merge` API, with merge metrics logged from table history |
-| Serve | `LMS_model` semantic model | Direct Lake over the Gold SQL analytics endpoint, 5 DAX measures, report with KPI cards, completion and grade breakdowns, and a decomposition tree |
+| Serve | `LMS_model` semantic model | Direct Lake over the Gold SQL analytics endpoint, 5 DAX measures, and a basic one page validation report (see note above) |
 
 More detail: [docs/architecture.md](docs/architecture.md)
+
+## Screenshots from the Fabric workspace
+
+**Orchestration: a successful end to end run** (all four stages green, about 22 minutes; the Gold step recovered from two transient failures through the retry policy)
+
+![Successful end to end pipeline run](docs/images/pipeline_successful_run.png)
+
+**Workspace lineage:** ADLS Gen2 source, ingestion pipeline, notebooks, Lakehouses and orchestrator
+
+![Fabric workspace lineage](docs/images/workspace_lineage.png)
+
+**Gold star schema in the Direct Lake semantic model**
+
+![Semantic model: fact_student_performance with dim_student and dim_course](docs/images/semantic_model.png)
+
+**Validation report.** Deliberately basic: it confirms the Gold tables, relationships and DAX measures return correct results through Direct Lake. Dashboard design was out of scope for this project.
+
+![Basic Power BI validation report](docs/images/report_overview.png)
 
 ## CI/CD
 
@@ -119,7 +139,7 @@ After completing the build I reviewed the committed definitions and fixed issues
 |---|---|---|
 | Ingestion loop passed a static file name to the notebook | Pipeline read `raw/file` instead of each new file | Pass `@item().name` and the run date |
 | Gold step received `workspace = "NA"`; Bronze and Silver hard-coded `fabric_DEV` | Gold failed; Prod runs would write to Dev | Workspace and storage are orchestrator parameters, and CI rejects hard-coded workspace names |
-| In-progress courses got a `12/31/9999` completion date | `Average Completion Days` inflated by millions of days; every in-progress course labelled "Delayed" | Keep completion null, add an `In-Progress` category, compute days with `datediff` |
+| In-progress courses got a `12/31/9999` completion date | Latent: any in-progress row without a completion date would add about 2.9 million days to `Average Completion Days` and be labelled "Delayed" | Keep completion null, add an `In-Progress` category, compute days with `datediff` |
 | Dimension sources not deduplicated before `MERGE` | Duplicate dimension rows on first load, "multiple source rows matched" failures on re-runs | Deduplicate on business keys before merging |
 
 Full write-up and remaining recommendations: [docs/engineering-review.md](docs/engineering-review.md)
