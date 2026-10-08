@@ -1,0 +1,292 @@
+table fact_student_performance
+	lineageTag: de4e04ed-676f-440d-bb55-9c3b988f9509
+	sourceLineageTag: [dbo].[fact_student_performance]
+
+	measure 'Total Students' = DISTINCTCOUNT(fact_student_performance[Student_ID])
+		formatString: 0
+		lineageTag: 8b072b62-86d9-4661-a225-6177c03007f2
+
+	measure 'Total Courses' = DISTINCTCOUNT(fact_student_performance[Course_ID])
+		formatString: 0
+		lineageTag: a574a20f-bb0b-472f-bccc-cf269e5377b5
+
+	measure 'Average Score' = AVERAGE(fact_student_performance[Performance_Score])
+		lineageTag: 46522dcd-4675-4129-8acf-669583df9dbc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Completion Days' = AVERAGE(fact_student_performance[Completion_Time_Days])
+		lineageTag: 2fef2bf2-f7cc-4950-8693-bd708a1a56d1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Quiz Score' = AVERAGE(fact_student_performance[Quiz_Average_Score])
+		lineageTag: 3bc5a217-c10f-4fd6-a1dd-1d0461d2d7d6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Student_ID
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 999005c3-7cd8-4f5d-bebe-6dda1a924b6a
+		sourceLineageTag: Student_ID
+		summarizeBy: none
+		sourceColumn: Student_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Course_ID
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: b4ccd056-8af9-42e6-8ce9-38752c53ee92
+		sourceLineageTag: Course_ID
+		summarizeBy: none
+		sourceColumn: Course_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Enrollment_Date
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 2e06fc94-e36e-40b6-9caf-3e583dee1576
+		sourceLineageTag: Enrollment_Date
+		summarizeBy: none
+		sourceColumn: Enrollment_Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column Completion_Date
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 3583e57e-72bd-49f7-86ba-cfcaf2669055
+		sourceLineageTag: Completion_Date
+		summarizeBy: none
+		sourceColumn: Completion_Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: c57ff543-de05-4909-81bd-c312cf913e37
+		sourceLineageTag: Status
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column Final_Grade
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 775db13c-38ac-4aed-b4cf-0f43c77c60bc
+		sourceLineageTag: Final_Grade
+		summarizeBy: none
+		sourceColumn: Final_Grade
+
+		annotation SummarizationSetBy = Automatic
+
+	column Attendance_Rate
+		dataType: double
+		sourceProviderType: float
+		lineageTag: f298786a-675a-4b1a-9a7c-15287a96a159
+		sourceLineageTag: Attendance_Rate
+		summarizeBy: sum
+		sourceColumn: Attendance_Rate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Time_Spent_on_Course_hrs
+		dataType: double
+		sourceProviderType: float
+		lineageTag: b971beb5-5c50-451f-8917-981946e70c8b
+		sourceLineageTag: Time_Spent_on_Course_hrs
+		summarizeBy: sum
+		sourceColumn: Time_Spent_on_Course_hrs
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Assignments_Completed
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 02e232c6-db5d-41ea-a948-45efed6f16a9
+		sourceLineageTag: Assignments_Completed
+		summarizeBy: sum
+		sourceColumn: Assignments_Completed
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quizzes_Completed
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 1562b12b-d2dd-4541-9383-e2143534bc2e
+		sourceLineageTag: Quizzes_Completed
+		summarizeBy: sum
+		sourceColumn: Quizzes_Completed
+
+		annotation SummarizationSetBy = Automatic
+
+	column Forum_Posts
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 409482ba-f522-42b3-bd2c-5d6a25e3fdd3
+		sourceLineageTag: Forum_Posts
+		summarizeBy: sum
+		sourceColumn: Forum_Posts
+
+		annotation SummarizationSetBy = Automatic
+
+	column Messages_Sent
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: aff4370a-52e8-4ffe-aadd-31efebe03963
+		sourceLineageTag: Messages_Sent
+		summarizeBy: sum
+		sourceColumn: Messages_Sent
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quiz_Average_Score
+		dataType: double
+		sourceProviderType: float
+		lineageTag: b5c4cd6b-de63-4058-8a9d-eada106e257d
+		sourceLineageTag: Quiz_Average_Score
+		summarizeBy: sum
+		sourceColumn: Quiz_Average_Score
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Assignment_Scores
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: e772271b-24b6-4f1b-9e6d-2d8715490cea
+		sourceLineageTag: Assignment_Scores
+		summarizeBy: none
+		sourceColumn: Assignment_Scores
+
+		annotation SummarizationSetBy = Automatic
+
+	column Assignment_Average_Score
+		dataType: double
+		sourceProviderType: float
+		lineageTag: efe13125-b181-40ad-96a6-7445fe38c1a2
+		sourceLineageTag: Assignment_Average_Score
+		summarizeBy: sum
+		sourceColumn: Assignment_Average_Score
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Project_Score
+		dataType: double
+		sourceProviderType: float
+		lineageTag: ff1967fe-f5b1-4587-b7c5-73a06ef68335
+		sourceLineageTag: Project_Score
+		summarizeBy: sum
+		sourceColumn: Project_Score
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Extra_Credit
+		dataType: double
+		sourceProviderType: float
+		lineageTag: ff62594e-dea0-4cfb-bc3b-4eaaa4172e18
+		sourceLineageTag: Extra_Credit
+		summarizeBy: sum
+		sourceColumn: Extra_Credit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Overall_Performance
+		dataType: double
+		sourceProviderType: float
+		lineageTag: 0fe97ce0-86b7-4f79-a424-af6ad7ef5d63
+		sourceLineageTag: Overall_Performance
+		summarizeBy: sum
+		sourceColumn: Overall_Performance
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Feedback_Score
+		dataType: double
+		sourceProviderType: float
+		lineageTag: a5846ff2-c6ce-46a4-9895-cd83c7248dda
+		sourceLineageTag: Feedback_Score
+		summarizeBy: sum
+		sourceColumn: Feedback_Score
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Completion_Time_Days
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 512e06f7-fa9d-49f9-9d88-9319dcabb40b
+		sourceLineageTag: Completion_Time_Days
+		summarizeBy: sum
+		sourceColumn: Completion_Time_Days
+
+		annotation SummarizationSetBy = Automatic
+
+	column Performance_Score
+		dataType: double
+		sourceProviderType: float
+		lineageTag: 07a29afb-a22f-4da4-b01f-eb22e10665a1
+		sourceLineageTag: Performance_Score
+		summarizeBy: sum
+		sourceColumn: Performance_Score
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Course_Completion_Rate
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: cbf07911-dc54-4274-87a2-a81f37e3e6ad
+		sourceLineageTag: Course_Completion_Rate
+		summarizeBy: none
+		sourceColumn: Course_Completion_Rate
+
+		annotation SummarizationSetBy = Automatic
+
+	column Processing_Date
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 9d1bc59c-ec0e-46a8-84d7-01cbd5068e03
+		sourceLineageTag: Processing_Date
+		summarizeBy: none
+		sourceColumn: Processing_Date
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_student_performance = entity
+		mode: directLake
+		source
+			entityName: fact_student_performance
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

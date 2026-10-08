@@ -1,0 +1,180 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "InvokePipeline",
+        "typeProperties": {
+          "parameters": {},
+          "waitOnCompletion": true,
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "pipelineId": "8fcb5434-9d39-834a-4b77-4682b801e1be",
+          "operationType": "InvokeFabricPipeline"
+        },
+        "externalReferences": {
+          "connection": "4b1ef19e-1bdb-4808-abc2-9eba9790fb34"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Raw to Landing",
+        "dependsOn": []
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "b6a26bf7-0b44-9d94-4dad-d4c0b4be8c1d",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "today_date": {
+              "value": {
+                "value": "@formatDateTime(utcNow(),'yyyy-MM-dd')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "workspace": {
+              "value": {
+                "value": "@pipeline().parameters.workspace_name",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "source_account": {
+              "value": {
+                "value": "@pipeline().parameters.storage_account",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "source_container": {
+              "value": {
+                "value": "@pipeline().parameters.storage_container",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "src_relative_path": {
+              "value": "landing",
+              "type": "string"
+            }
+          },
+          "sessionTag": "lms_pipeline"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 120,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Landing to Bronze",
+        "dependsOn": [
+          {
+            "activity": "Raw to Landing",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "91efc82e-9efa-99be-4c00-a85f51ceda3e",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "today_date": {
+              "value": {
+                "value": "@formatDateTime(utcNow(),'yyyy-MM-dd')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "workspace": {
+              "value": {
+                "value": "@pipeline().parameters.workspace_name",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          },
+          "sessionTag": "lms_pipeline"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 120,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Silver Transform",
+        "dependsOn": [
+          {
+            "activity": "Landing to Bronze",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "c440a728-988f-97f4-4b85-30a8e31b11a1",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "today_date": {
+              "value": {
+                "value": "@formatDateTime(utcNow(),'yyyy-MM-dd')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "workspace": {
+              "value": {
+                "value": "@pipeline().parameters.workspace_name",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          },
+          "sessionTag": "lms_pipeline"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 120,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Gold Layer",
+        "dependsOn": [
+          {
+            "activity": "Silver Transform",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "workspace_name": {
+        "type": "string",
+        "defaultValue": "fabric_DEV"
+      },
+      "storage_account": {
+        "type": "string",
+        "defaultValue": "fabric122"
+      },
+      "storage_container": {
+        "type": "string",
+        "defaultValue": "fabricproject"
+      }
+    }
+  }
+}

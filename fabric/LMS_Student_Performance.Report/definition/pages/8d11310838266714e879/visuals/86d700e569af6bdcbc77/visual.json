@@ -1,0 +1,204 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "86d700e569af6bdcbc77",
+  "position": {
+    "x": 36.474164133738604,
+    "y": 13.130699088145896,
+    "z": 0,
+    "height": 167.78115501519756,
+    "width": 1883.5258358662613,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_student_performance"
+                    }
+                  },
+                  "Property": "Total Students"
+                }
+              },
+              "queryRef": "fact_student_performance.Total Students",
+              "nativeQueryRef": "Total Students"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_student_performance"
+                    }
+                  },
+                  "Property": "Total Courses"
+                }
+              },
+              "queryRef": "fact_student_performance.Total Courses",
+              "nativeQueryRef": "Total Courses"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_student_performance"
+                    }
+                  },
+                  "Property": "Average Score"
+                }
+              },
+              "queryRef": "fact_student_performance.Average Score",
+              "nativeQueryRef": "Average Score"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_student_performance"
+                    }
+                  },
+                  "Property": "Average Completion Days"
+                }
+              },
+              "queryRef": "fact_student_performance.Average Completion Days",
+              "nativeQueryRef": "Average Completion Days"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_student_performance"
+                    }
+                  },
+                  "Property": "Average Quiz Score"
+                }
+              },
+              "queryRef": "fact_student_performance.Average Quiz Score",
+              "nativeQueryRef": "Average Quiz Score"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_student_performance"
+                  }
+                },
+                "Property": "Total Students"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "value": [
+        {
+          "properties": {
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "default"
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "2ee8fc2ca3a4fcb0dd19",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_student_performance"
+              }
+            },
+            "Property": "Total Students"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "cb3ade55578521dfff0c",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_student_performance"
+              }
+            },
+            "Property": "Total Courses"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "1632a4a84b2d99a7a14b",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_student_performance"
+              }
+            },
+            "Property": "Average Score"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "a6f417c77093ac6180f0",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_student_performance"
+              }
+            },
+            "Property": "Average Completion Days"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "8cc0dc3fdaf04512f015",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_student_performance"
+              }
+            },
+            "Property": "Average Quiz Score"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

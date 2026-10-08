@@ -1,0 +1,131 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "GetMetadata",
+        "typeProperties": {
+          "datasetSettings": {
+            "type": "DelimitedText",
+            "typeProperties": {
+              "location": {
+                "type": "AzureBlobFSLocation",
+                "fileSystem": "fabricproject",
+                "folderPath": "raw"
+              },
+              "columnDelimiter": ",",
+              "quoteChar": "\"",
+              "escapeChar": "\\",
+              "firstRowAsHeader": true
+            },
+            "schema": [],
+            "externalReferences": {
+              "connection": "dc088f26-0022-477d-9480-d8cd1645396a"
+            },
+            "annotations": []
+          },
+          "fieldList": [
+            "childItems"
+          ],
+          "storeSettings": {
+            "type": "AzureBlobFSReadSettings",
+            "recursive": true,
+            "enablePartitionDiscovery": false,
+            "modifiedDatetimeStart": {
+              "value": "@startOfDay(utcNow())",
+              "type": "Expression"
+            },
+            "modifiedDatetimeEnd": {
+              "value": "@utcNow()",
+              "type": "Expression"
+            }
+          },
+          "formatSettings": {
+            "type": "DelimitedTextReadSettings"
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Get new raw files",
+        "dependsOn": []
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": true,
+          "items": {
+            "value": "@activity('Get new raw files').output.childItems",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "ed3ec01b-45ce-91ef-44af-23d242332e1b",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "today_file": {
+                    "value": {
+                      "value": "@item().name",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "processed_date": {
+                    "value": {
+                      "value": "@formatDateTime(utcNow(),'yyyy-MM-dd')",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "source_account": {
+                    "value": "fabric122",
+                    "type": "string"
+                  },
+                  "source_container": {
+                    "value": "fabricproject",
+                    "type": "string"
+                  },
+                  "src_relative_path": {
+                    "value": "raw",
+                    "type": "string"
+                  },
+                  "destination_account": {
+                    "value": "fabric122",
+                    "type": "string"
+                  },
+                  "destination_container": {
+                    "value": "fabricproject",
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Raw to landing",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "For each new file",
+        "dependsOn": [
+          {
+            "activity": "Get new raw files",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,114 @@
+table dim_student
+	lineageTag: 3972b333-5d49-47e1-8bfa-a6418881016d
+	sourceLineageTag: [dbo].[dim_student]
+
+	column Student_ID
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 01eb2a66-76ab-4dc3-bb54-1eceb59019d7
+		sourceLineageTag: Student_ID
+		summarizeBy: none
+		sourceColumn: Student_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Name
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 8dfee90d-d341-4f64-9e0a-dd756c83d1c6
+		sourceLineageTag: Name
+		summarizeBy: none
+		sourceColumn: Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Age
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: d5cd2134-6eb8-42a1-822d-a1cae8fb6521
+		sourceLineageTag: Age
+		summarizeBy: none
+		sourceColumn: Age
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gender
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: c70cb634-d6dd-4a2e-ad87-3c329ac63fa3
+		sourceLineageTag: Gender
+		summarizeBy: none
+		sourceColumn: Gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column Demographic_Group
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: a50edd3a-95eb-4441-a369-8c8d0923334f
+		sourceLineageTag: Demographic_Group
+		summarizeBy: none
+		sourceColumn: Demographic_Group
+
+		annotation SummarizationSetBy = Automatic
+
+	column Internet_Access
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 6bb9897c-7d63-4b6e-bec4-342ca70cb28e
+		sourceLineageTag: Internet_Access
+		summarizeBy: none
+		sourceColumn: Internet_Access
+
+		annotation SummarizationSetBy = Automatic
+
+	column Learning_Disabilities
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: ccbf6608-5728-4ac9-b618-e5ecad8262aa
+		sourceLineageTag: Learning_Disabilities
+		summarizeBy: none
+		sourceColumn: Learning_Disabilities
+
+		annotation SummarizationSetBy = Automatic
+
+	column Preferred_Learning_Style
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 4e2dd855-5403-43e4-a50f-74480f8f0d9d
+		sourceLineageTag: Preferred_Learning_Style
+		summarizeBy: none
+		sourceColumn: Preferred_Learning_Style
+
+		annotation SummarizationSetBy = Automatic
+
+	column Language_Proficiency
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 12ada508-fdc9-4370-9aee-3cfa8dc0922c
+		sourceLineageTag: Language_Proficiency
+		summarizeBy: none
+		sourceColumn: Language_Proficiency
+
+		annotation SummarizationSetBy = Automatic
+
+	column Parent_Involvement
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 85663a8b-d1fd-4c75-bf64-a034534880ef
+		sourceLineageTag: Parent_Involvement
+		summarizeBy: none
+		sourceColumn: Parent_Involvement
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_student = entity
+		mode: directLake
+		source
+			entityName: dim_student
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+
